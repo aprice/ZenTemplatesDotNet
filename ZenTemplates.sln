@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30110.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZenTemplates", "ZenTemplates\ZenTemplates.csproj", "{BA7E62C0-BFC3-4C78-B632-442FC8F68B3E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZenTemplates.HttpHandler", "ZenTemplates.HttpHandler\ZenTemplates.HttpHandler.csproj", "{5FD70629-85E9-4187-898D-376E91B4B924}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZenTemplates.Configuration", "ZenTemplates.Configuration\ZenTemplates.Configuration.csproj", "{1B9D8A6F-0797-467B-90E0-B40C2146B8C8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZenTemplates.Test", "ZenTemplates.Test\ZenTemplates.Test.csproj", "{7837DA41-B6E0-4968-9101-0273C9B8C26D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BA7E62C0-BFC3-4C78-B632-442FC8F68B3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA7E62C0-BFC3-4C78-B632-442FC8F68B3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA7E62C0-BFC3-4C78-B632-442FC8F68B3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA7E62C0-BFC3-4C78-B632-442FC8F68B3E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FD70629-85E9-4187-898D-376E91B4B924}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FD70629-85E9-4187-898D-376E91B4B924}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FD70629-85E9-4187-898D-376E91B4B924}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FD70629-85E9-4187-898D-376E91B4B924}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B9D8A6F-0797-467B-90E0-B40C2146B8C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B9D8A6F-0797-467B-90E0-B40C2146B8C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B9D8A6F-0797-467B-90E0-B40C2146B8C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B9D8A6F-0797-467B-90E0-B40C2146B8C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7837DA41-B6E0-4968-9101-0273C9B8C26D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7837DA41-B6E0-4968-9101-0273C9B8C26D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7837DA41-B6E0-4968-9101-0273C9B8C26D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7837DA41-B6E0-4968-9101-0273C9B8C26D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
