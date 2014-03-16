@@ -19,20 +19,34 @@ namespace ZenTemplates.Parser.Context
 
 		public object GetProperty(string key)
 		{
-			if (CurrentNode == null || CurrentNode is ValueType)
+			return GetProperty(CurrentNode, key);
+		}
+
+		private object GetProperty(object node, string key)
+		{
+			if (String.IsNullOrEmpty(key))
+			{
+				return node;
+			}
+
+			string[] keyParts = key.Split(new char[] { '.' }, 2);
+			string currentKey = keyParts[0];
+			string remainderKey = keyParts.Length > 1 ? keyParts[1] : null;
+
+			if (node == null || node is ValueType)
 			{
 				return null;
 			}
-			else if (CurrentNode is IDictionary)
+			else if (node is IDictionary)
 			{
-				return ((IDictionary)CurrentNode)[key];
+				return GetProperty(((IDictionary)node)[currentKey], remainderKey);
 			}
-			else if (CurrentNode is IList)
+			else if (node is IList)
 			{
 				int idx;
-				if (Int32.TryParse(key, out idx))
+				if (Int32.TryParse(currentKey, out idx))
 				{
-					return ((IList)CurrentNode)[idx];
+					return GetProperty(((IList)node)[idx], remainderKey);
 				}
 				else
 				{
@@ -41,7 +55,7 @@ namespace ZenTemplates.Parser.Context
 			}
 			else
 			{
-				return GetFieldValue(CurrentNode, key);
+				return GetProperty(GetFieldValue(node, currentKey), remainderKey);
 			}
 		}
 

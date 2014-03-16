@@ -9,10 +9,15 @@ namespace ZenTemplates.Parser
 	{
 		public ILookupContext Lookup { get; set; }
 
+		public SubstitutionParser(ILookupContext context)
+		{
+			Lookup = context;
+		}
+
 		public string Substitute(string input)
 		{
 			// Produces tokens of 
-			string[] tokens = Regex.Split(input, "(?:^|[^\\\\])(?:\\\\\\\\)*\\(${[^}]})");
+			string[] tokens = Regex.Split(input, @"(^|[^\\])(?:\\\\)*(\$\{[^}]+\})");
 
 			if (tokens.Length == 0)
 			{
@@ -33,21 +38,14 @@ namespace ZenTemplates.Parser
 				else if (token.StartsWith("${") && token.EndsWith("}"))
 				{
 					string key = token.Substring(2, token.Length - 3);
-					if (!Lookup.HasProperty(key))
+					var value = Lookup.GetProperty(key);
+					if (value == null)
 					{
 						continue;
 					}
 					else
 					{
-						var value = Lookup.GetProperty(key);
-						if (value == null)
-						{
-							continue;
-						}
-						else
-						{
-							sb.Append(value.ToString());
-						}
+						sb.Append(value.ToString());
 					}
 				}
 				else

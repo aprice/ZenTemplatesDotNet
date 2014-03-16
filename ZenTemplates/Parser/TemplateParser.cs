@@ -76,6 +76,7 @@ namespace ZenTemplates.Parser
 					HandleElement(childContext);
 				}
 			}
+			HandleSubstitution(docContext);
 		}
 
 		private void Inject(DocumentContext docContext, string key)
@@ -96,6 +97,17 @@ namespace ZenTemplates.Parser
 				ModelContext modelContext = new ModelContext(val);
 				DocumentContext childContext = new DocumentContext(modelContext, element);
 				HandleChildren(childContext);
+			}
+		}
+
+		public void HandleSubstitution(DocumentContext docContext)
+		{
+			SubstitutionParser subsParser = new SubstitutionParser(docContext);
+			string result = subsParser.Substitute(docContext.Element.InnerHtml);
+			docContext.Element.InnerHtml = result;
+			foreach (HtmlAttribute attribute in docContext.Element.Attributes)
+			{
+				attribute.Value = subsParser.Substitute(attribute.Value);
 			}
 		}
 
