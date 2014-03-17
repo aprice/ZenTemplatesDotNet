@@ -14,6 +14,7 @@ namespace ZenTemplates.Parser
 			Lookup = context;
 		}
 
+		private static readonly Regex TokenRegex = new Regex(@"(^|[^\\])(?:\\\\)*(\$\{[^}]+\})");
 		public string Substitute(string input)
 		{
 			if (String.IsNullOrEmpty(input))
@@ -22,7 +23,7 @@ namespace ZenTemplates.Parser
 			}
 
 			// Produces tokens of 
-			string[] tokens = Regex.Split(input, @"(^|[^\\])(?:\\\\)*(\$\{[^}]+\})");
+			string[] tokens = TokenRegex.Split(input);
 
 			if (tokens.Length == 1)
 			{

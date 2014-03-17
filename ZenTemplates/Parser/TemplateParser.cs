@@ -78,12 +78,28 @@ namespace ZenTemplates.Parser
 		private void HandleElement(DocumentContext docContext)
 		{
 			HtmlNode element = docContext.Element;
+			HtmlAttribute attribute;
+			attribute = element.Attributes["data-z-if"];
+			if (attribute != null)
+			{
+				BooleanParser boolParser = new BooleanParser(docContext);
+				if (boolParser.Parse(attribute.Value))
+				{
+					attribute.Remove();
+				}
+				else
+				{
+					element.Remove();
+					return;
+				}
+			}
+
 			bool injecting = false;
-			HtmlAttribute attribute = element.Attributes["data-z-inject"];
+			attribute = element.Attributes["data-z-inject"];
 			if (attribute != null)
 			{
 				injecting = true;
-				element.Attributes.Remove(attribute);
+				attribute.Remove();
 				Inject(docContext, docContext.GetProperty(attribute.Value));
 			}
 

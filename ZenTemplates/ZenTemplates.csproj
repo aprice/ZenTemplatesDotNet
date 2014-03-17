@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileRepository.cs" />
+    <Compile Include="Parser\BooleanParser.cs" />
     <Compile Include="Parser\Context\DocumentContext.cs" />
     <Compile Include="Parser\Context\ILookupContext.cs" />
     <Compile Include="Parser\Context\ModelContext.cs" />
