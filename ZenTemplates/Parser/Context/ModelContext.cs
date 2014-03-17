@@ -26,8 +26,8 @@ namespace ZenTemplates.Parser.Context
 			}
 
 			string[] keyParts = key.Split(new char[] { '.' }, 2);
-			string currentKey = keyParts[0];
-			string remainderKey = keyParts.Length > 1 ? keyParts[1] : null;
+			string currentKey = keyParts[0].Trim();
+			string remainderKey = keyParts.Length > 1 ? keyParts[1].Trim() : null;
 
 			if (node == null || node is ValueType)
 			{
@@ -35,14 +35,16 @@ namespace ZenTemplates.Parser.Context
 			}
 			else if (node is IDictionary)
 			{
-				return GetProperty(((IDictionary)node)[currentKey], remainderKey);
+				IDictionary dictionary = (IDictionary)node;
+				return dictionary.Contains(currentKey) ? GetProperty(((IDictionary)node)[currentKey], remainderKey) : null;
 			}
 			else if (node is IList)
 			{
 				int idx;
+				IList list = (IList)node;
 				if (Int32.TryParse(currentKey, out idx))
 				{
-					return GetProperty(((IList)node)[idx], remainderKey);
+					return idx < list.Count ? GetProperty(((IList)node)[idx], remainderKey) : null;
 				}
 				else
 				{

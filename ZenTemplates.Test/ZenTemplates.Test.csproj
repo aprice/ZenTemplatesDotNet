@@ -54,6 +54,7 @@
     <Compile Include="InjectionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SubstitutionTest.cs" />
+    <Compile Include="BooleanTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ZenTemplates\ZenTemplates.csproj">

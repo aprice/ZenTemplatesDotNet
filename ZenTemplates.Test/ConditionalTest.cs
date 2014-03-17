@@ -1,7 +1,4 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ZenTemplates.Parser;
 
 namespace ZenTemplates.Test
@@ -59,6 +56,23 @@ namespace ZenTemplates.Test
 			parser.Model["testData"] = true;
 			parser.Model["testData2"] = false;
 			parser.Model["testData3"] = true;
+			parser.LoadTemplateHtml(inHtml);
+			parser.Render();
+			string result = parser.GetOutput();
+			Assert.AreEqual(outHtml, result);
+		}
+
+		[TestMethod]
+		public void LoremTest()
+		{
+			string inHtml = @"<!DOCTYPE html>
+<html><head><title>Test document</title></head>
+<body><p data-z-lorem>Test content</p></body></html>";
+			string outHtml = @"<!DOCTYPE html>
+<html><head><title>Test document</title></head>
+<body></body></html>";
+
+			TemplateParser parser = new TemplateParser();
 			parser.LoadTemplateHtml(inHtml);
 			parser.Render();
 			string result = parser.GetOutput();

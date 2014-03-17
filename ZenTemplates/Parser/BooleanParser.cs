@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using ZenTemplates.Parser.Context;
 
 namespace ZenTemplates.Parser
@@ -11,6 +9,7 @@ namespace ZenTemplates.Parser
 	public class BooleanParser
 	{
 		public const string TrueString = "True";
+		public const string FalseString = "False";
 		public ILookupContext Lookup { get; set; }
 
 		public BooleanParser(ILookupContext context)
@@ -106,6 +105,7 @@ namespace ZenTemplates.Parser
 
 		private bool IsTruthy(object value)
 		{
+			double doubleVal;
 			if (value == null)
 			{
 				return false;
@@ -116,16 +116,41 @@ namespace ZenTemplates.Parser
 			}
 			else if (value is string)
 			{
-				return ((string)value).Equals(TrueString, StringComparison.OrdinalIgnoreCase);
+				return !String.IsNullOrWhiteSpace((string)value)
+					&& !((string)value).Equals(FalseString, StringComparison.OrdinalIgnoreCase);
 			}
-			else if (value is double || value is long)
+			else if (TryConvertDouble(value, out doubleVal))
 			{
-				return ((int)value) != 0;
+				return doubleVal != 0.0d;
 			}
 			else
 			{
 				// object null => false handled above
 				return true;
+			}
+		}
+
+		private bool TryConvertDouble(object value, out double doubleValue)
+		{
+			if (value is sbyte
+				|| value is byte
+				|| value is short
+				|| value is ushort
+				|| value is int
+				|| value is uint
+				|| value is long
+				|| value is ulong
+				|| value is float
+				|| value is double
+				|| value is decimal)
+			{
+				doubleValue = Convert.ToDouble(value);
+				return true;
+			}
+			else
+			{
+				doubleValue = 0.0d;
+				return false;
 			}
 		}
 	}

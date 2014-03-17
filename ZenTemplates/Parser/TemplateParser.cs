@@ -47,15 +47,6 @@ namespace ZenTemplates.Parser
 		}
 
 		/// <summary>
-		/// Return the transformed document as a string.
-		/// </summary>
-		/// <returns>Output of document transformation</returns>
-		public string GetOutput()
-		{
-			return Document.DocumentNode.OuterHtml;
-		}
-
-		/// <summary>
 		/// Load a template from an HTML string.
 		/// </summary>
 		/// <param name="inHtml">HTML template content</param>
@@ -64,9 +55,21 @@ namespace ZenTemplates.Parser
 			Document.LoadHtml(inHtml);
 		}
 
+		/// <summary>
+		/// Execute rendering process for the current template and model.
+		/// </summary>
 		public void Render()
 		{
 			HandleInjection();
+		}
+
+		/// <summary>
+		/// Return the transformed document as a string.
+		/// </summary>
+		/// <returns>Output of document transformation</returns>
+		public string GetOutput()
+		{
+			return Document.DocumentNode.OuterHtml;
 		}
 
 		private void HandleInjection()
@@ -79,6 +82,13 @@ namespace ZenTemplates.Parser
 		{
 			HtmlNode element = docContext.Element;
 			HtmlAttribute attribute;
+			attribute = element.Attributes["data-z-lorem"];
+			if (attribute != null)
+			{
+				element.Remove();
+				return;
+			}
+
 			attribute = element.Attributes["data-z-if"];
 			if (attribute != null)
 			{
