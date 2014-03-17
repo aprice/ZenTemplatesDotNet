@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ZenTemplates.Parser.Context
 {
@@ -56,57 +52,6 @@ namespace ZenTemplates.Parser.Context
 			else
 			{
 				return GetProperty(GetFieldValue(node, currentKey), remainderKey);
-			}
-		}
-
-		public bool HasProperty(string key)
-		{
-			return HasProperty(key, true);
-		}
-
-		public bool HasProperty(string key, bool checkRoot)
-		{
-			if (CurrentNode == null || CurrentNode is ValueType)
-			{
-				return false;
-			}
-			else if (CurrentNode is IDictionary)
-			{
-				return ((IDictionary)CurrentNode).Contains(key);
-			}
-			else if (CurrentNode is IList)
-			{
-				int idx;
-				if (Int32.TryParse(key, out idx))
-				{
-					return ((IList)CurrentNode).Count > idx;
-				}
-				else
-				{
-					return false;
-				}
-			}
-			else
-			{
-				return HasField(CurrentNode, key);
-			}
-		}
-
-		public bool LookupBoolean(string key)
-		{
-			throw new NotImplementedException();
-		}
-
-		private static bool HasField(object ob, string name)
-		{
-			if (ob == null)
-			{
-				return false;
-			}
-			else
-			{
-				Type type = ob.GetType();
-				return (type.GetField(name) != null || type.GetProperty(name, BindingFlags.GetProperty) != null);
 			}
 		}
 

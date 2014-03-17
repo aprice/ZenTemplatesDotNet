@@ -3,13 +3,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ZenTemplates.Parser.Context;
 
 namespace ZenTemplates.Parser
 {
-	public class TemplateParser : TemplateParser<IDictionary<string,object>>
+	/// <summary>
+	/// Default Zen Tempalate Parser using a basic string/object key-value model.
+	/// </summary>
+	public class TemplateParser : TemplateParser<IDictionary<string, object>>
 	{
 		public TemplateParser()
 			: base()
@@ -18,6 +19,10 @@ namespace ZenTemplates.Parser
 		}
 	}
 
+	/// <summary>
+	/// Zen Template parser implementation.
+	/// </summary>
+	/// <typeparam name="TModel">Model type</typeparam>
 	public class TemplateParser<TModel>
 	{
 		private HtmlDocument Document;
@@ -41,7 +46,30 @@ namespace ZenTemplates.Parser
 			Document = new HtmlDocument();
 		}
 
-		public void HandleInjection()
+		/// <summary>
+		/// Return the transformed document as a string.
+		/// </summary>
+		/// <returns>Output of document transformation</returns>
+		public string GetOutput()
+		{
+			return Document.DocumentNode.OuterHtml;
+		}
+
+		/// <summary>
+		/// Load a template from an HTML string.
+		/// </summary>
+		/// <param name="inHtml">HTML template content</param>
+		public void LoadTemplateHtml(string inHtml)
+		{
+			Document.LoadHtml(inHtml);
+		}
+
+		public void Render()
+		{
+			HandleInjection();
+		}
+
+		private void HandleInjection()
 		{
 			DocumentContext rootDocContext = new DocumentContext(RootModelContext, Document.DocumentNode);
 			HandleElement(rootDocContext);
@@ -55,8 +83,8 @@ namespace ZenTemplates.Parser
 			if (attribute != null)
 			{
 				injecting = true;
-				Inject(docContext, attribute.Value);
 				element.Attributes.Remove(attribute);
+				Inject(docContext, docContext.GetProperty(attribute.Value));
 			}
 
 			if (!injecting && element.HasChildNodes)
@@ -68,7 +96,10 @@ namespace ZenTemplates.Parser
 		private void HandleChildren(DocumentContext docContext)
 		{
 			HtmlNode element = docContext.Element;
-			foreach (HtmlNode child in element.ChildNodes)
+			IEnumerable<HtmlNode> childNodes = (from node in element.ChildNodes
+												where node.NodeType == HtmlNodeType.Element
+												select node).ToList();
+			foreach (HtmlNode child in childNodes)
 			{
 				if (child.NodeType == HtmlNodeType.Element)
 				{
@@ -79,11 +110,10 @@ namespace ZenTemplates.Parser
 			HandleSubstitution(docContext);
 		}
 
-		private void Inject(DocumentContext docContext, string key)
+		private void Inject(DocumentContext docContext, object val)
 		{
 			HtmlNode element = docContext.Element;
 
-			object val = docContext.GetProperty(key);
 			if (val == null)
 			{
 				element.InnerHtml = "";
@@ -91,6 +121,27 @@ namespace ZenTemplates.Parser
 			else if (val is ValueType || val is string)
 			{
 				element.InnerHtml = HtmlEntity.Entitize(val.ToString());
+			}
+			else if (val is IDictionary)
+			{
+				ModelContext modelContext = new ModelContext(val);
+				DocumentContext childContext = new DocumentContext(modelContext, element);
+				HandleChildren(childContext);
+			}
+			else if (val is IEnumerable)
+			{
+				HtmlNode insertAfter = element;
+				HtmlNode parentNode = element.ParentNode;
+				foreach (object item in (IEnumerable)val)
+				{
+					HtmlNode newElement = element.CloneNode(true);
+					parentNode.InsertAfter(newElement, insertAfter);
+					insertAfter = newElement;
+					ModelContext modelContext = new ModelContext(item);
+					DocumentContext childContext = new DocumentContext(modelContext, newElement);
+					Inject(childContext, item);
+				}
+				element.Remove();
 			}
 			else
 			{
@@ -100,7 +151,7 @@ namespace ZenTemplates.Parser
 			}
 		}
 
-		public void HandleSubstitution(DocumentContext docContext)
+		private void HandleSubstitution(DocumentContext docContext)
 		{
 			SubstitutionParser subsParser = new SubstitutionParser(docContext);
 			string result = subsParser.Substitute(docContext.Element.InnerHtml);
@@ -109,16 +160,6 @@ namespace ZenTemplates.Parser
 			{
 				attribute.Value = subsParser.Substitute(attribute.Value);
 			}
-		}
-
-		public string GetOutput()
-		{
-			return Document.DocumentNode.OuterHtml;
-		}
-
-		public void LoadTemplateHtml(string inHtml)
-		{
-			Document.LoadHtml(inHtml);
 		}
 	}
 }

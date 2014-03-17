@@ -16,14 +16,15 @@ namespace ZenTemplates.Parser
 
 		public string Substitute(string input)
 		{
-			// Produces tokens of 
-			string[] tokens = Regex.Split(input, @"(^|[^\\])(?:\\\\)*(\$\{[^}]+\})");
-
-			if (tokens.Length == 0)
+			if (String.IsNullOrEmpty(input))
 			{
 				return "";
 			}
-			else if (tokens.Length == 1)
+
+			// Produces tokens of 
+			string[] tokens = Regex.Split(input, @"(^|[^\\])(?:\\\\)*(\$\{[^}]+\})");
+
+			if (tokens.Length == 1)
 			{
 				return tokens[0];
 			}
