@@ -8,6 +8,8 @@ namespace ZenTemplates
 	{
 		protected ZenTemplatesConfiguration Configuration { get; set; }
 
+		public FileRepository() : this(ZenTemplatesConfiguration.Current) { }
+
 		public FileRepository(ZenTemplatesConfiguration configuration)
 		{
 			Configuration = configuration;
@@ -18,7 +20,7 @@ namespace ZenTemplates
 			string dirName = directory;
 			if (!Directory.Exists(directory))
 			{
-				dirName = Directory.GetCurrentDirectory() + directory;
+				dirName = Directory.GetCurrentDirectory() + "/" + directory;
 			}
 
 			if (!Directory.Exists(directory))
@@ -26,7 +28,7 @@ namespace ZenTemplates
 				return null;
 			}
 
-			string fullPath = directory + fileName;
+			string fullPath = directory + "/" + fileName;
 			if (File.Exists(fullPath))
 			{
 				return new FileInfo(fullPath);
@@ -34,18 +36,6 @@ namespace ZenTemplates
 			else
 			{
 				return null;
-			}
-		}
-
-		protected string AppendExtension(string name, string extension)
-		{
-			if (name.EndsWith(extension))
-			{
-				return name;
-			}
-			else
-			{
-				return name + extension;
 			}
 		}
 
@@ -86,6 +76,18 @@ namespace ZenTemplates
 			}
 
 			return result;
+		}
+
+		private string AppendExtension(string name, string extension)
+		{
+			if (name.EndsWith(extension))
+			{
+				return name;
+			}
+			else
+			{
+				return name + extension;
+			}
 		}
 	}
 }

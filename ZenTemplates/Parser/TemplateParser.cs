@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using ZenTemplates.Parser.Context;
 
@@ -58,6 +59,24 @@ namespace ZenTemplates.Parser
 		public void LoadTemplateHtml(string inHtml)
 		{
 			Document.LoadHtml(inHtml);
+		}
+
+		/// <summary>
+		/// Load a template from an HTML file reference.
+		/// </summary>
+		/// <param name="file">Reference to a file containing template content</param>
+		public void LoadTemplateFile(FileInfo file)
+		{
+			string contents;
+			using (FileStream stream = file.OpenRead())
+			{
+				using (StreamReader reader = new StreamReader(stream))
+				{
+					contents = reader.ReadToEnd();
+				}
+			}
+
+			LoadTemplateHtml(contents);
 		}
 
 		/// <summary>

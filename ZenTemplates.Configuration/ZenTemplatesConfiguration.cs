@@ -11,20 +11,20 @@ namespace ZenTemplates.Configuration
 {
     public class ZenTemplatesConfiguration
     {
-		private static ZenTemplatesConfiguration _instance = new ZenTemplatesConfiguration();
-		public static ZenTemplatesConfiguration Instance
+		private static ZenTemplatesConfiguration _current = new ZenTemplatesConfiguration();
+		public static ZenTemplatesConfiguration Current
 		{
 			get
 			{
-				return _instance;
+				return _current;
 			}
 		}
 
-		public string TemplateRoot { get; protected set; }
-		public string ParentRoot { get; protected set; }
-		public string SnippetRoot { get; protected set; }
-		public string TemplateFileExtension { get; protected set; }
-		public string SnippetFileExtension { get; protected set; }
+		public string TemplateRoot { get; set; }
+		public string ParentRoot { get; set; }
+		public string SnippetRoot { get; set; }
+		public string TemplateFileExtension { get; set; }
+		public string SnippetFileExtension { get; set; }
 
 		public ZenTemplatesConfiguration()
 		{

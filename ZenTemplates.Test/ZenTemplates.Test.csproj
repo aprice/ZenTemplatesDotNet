@@ -55,12 +55,22 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SubstitutionTest.cs" />
     <Compile Include="BooleanTest.cs" />
+    <Compile Include="FileTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ZenTemplates.Configuration\ZenTemplates.Configuration.csproj">
+      <Project>{1b9d8a6f-0797-467b-90e0-b40c2146b8c8}</Project>
+      <Name>ZenTemplates.Configuration</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ZenTemplates\ZenTemplates.csproj">
       <Project>{ba7e62c0-bfc3-4c78-b632-442fc8f68b3e}</Project>
       <Name>ZenTemplates</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Templates\Reference\simple.html" />
+    <Content Include="Templates\Sample\simple.html" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
