@@ -63,6 +63,24 @@ namespace ZenTemplates.Test
 		}
 
 		[TestMethod]
+		public void ElseTest()
+		{
+			string inHtml = @"<!DOCTYPE html>
+<html><head><title>Test document</title></head>
+<body><p data-z-if=""testData"" id=""TestIf"">Test content</p><p data-z-else=""TestIf"">Alternative content</p></body></html>";
+			string outHtml = @"<!DOCTYPE html>
+<html><head><title>Test document</title></head>
+<body><p id=""TestIf"">Alternative content</p></body></html>";
+
+			TemplateParser parser = new TemplateParser();
+			parser.Model["testData"] = false;
+			parser.LoadTemplateHtml(inHtml);
+			parser.Render();
+			string result = parser.GetOutput();
+			Assert.AreEqual(outHtml, result);
+		}
+
+		[TestMethod]
 		public void LoremTest()
 		{
 			string inHtml = @"<!DOCTYPE html>

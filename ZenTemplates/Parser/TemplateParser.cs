@@ -43,7 +43,12 @@ namespace ZenTemplates.Parser
 
 		public TemplateParser()
 		{
-			Document = new HtmlDocument();
+			Document = new HtmlDocument()
+			{
+				OptionUseIdAttribute = true,
+				OptionFixNestedTags = true,
+				OptionWriteEmptyNodes = true
+			};
 		}
 
 		/// <summary>
@@ -96,11 +101,45 @@ namespace ZenTemplates.Parser
 				if (boolParser.Parse(attribute.Value))
 				{
 					attribute.Remove();
+					string id = element.Id;
+					attribute = element.Attributes["data-z-else"];
+					if (attribute != null)
+					{
+						id = attribute.Value;
+					}
+
+					if (!String.IsNullOrEmpty(id))
+					{
+						IEnumerable<HtmlNode> allElements = Document.DocumentNode.Descendants();
+						IEnumerable<HtmlNode> allElses =
+							from el in allElements
+							where el.NodeType == HtmlNodeType.Element
+								 && ((el.Attributes["data-z-else"] != null && el.Attributes["data-z-else"].Value == id) || el.Id == id)
+							select el;
+						foreach (HtmlNode el in allElses)
+						{
+							if (el != element)
+							{
+								el.Remove();
+							}
+						}
+
+						element.Id = id;
+					}
 				}
 				else
 				{
 					element.Remove();
 					return;
+				}
+			}
+			else
+			{
+				attribute = element.Attributes["data-z-else"];
+				if (attribute != null)
+				{
+					element.SetAttributeValue("id", attribute.Value);
+					attribute.Remove();
 				}
 			}
 
