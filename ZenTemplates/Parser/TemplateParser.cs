@@ -84,7 +84,24 @@ namespace ZenTemplates.Parser
 		/// </summary>
 		public void Render()
 		{
+			HandleDerivation();
 			HandleInjection();
+		}
+
+		private void HandleDerivation()
+		{
+			// Check for derivation
+
+			// Load parent template
+
+			// Execute parent derivation
+
+			// Handle overrides
+
+			// Handle appends
+
+			// Replace Document
+
 		}
 
 		/// <summary>
