@@ -69,6 +69,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Content Include="Templates\Sample\Controller\Index.html" />
     <Content Include="Templates\Reference\simple.html" />
     <Content Include="Templates\Sample\simple.html" />
   </ItemGroup>

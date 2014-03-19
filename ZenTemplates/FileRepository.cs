@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using ZenTemplates.Configuration;
 
@@ -15,28 +16,13 @@ namespace ZenTemplates
 			Configuration = configuration;
 		}
 
-		protected FileInfo LookInDirectory(string fileName, string directory)
+		protected FileInfo LookInDirectory(string fileName, params string[] path)
 		{
-			string dirName = directory;
-			if (!Directory.Exists(directory))
-			{
-				dirName = Directory.GetCurrentDirectory() + "/" + directory;
-			}
-
-			if (!Directory.Exists(directory))
-			{
-				return null;
-			}
-
-			string fullPath = directory + "/" + fileName;
-			if (File.Exists(fullPath))
-			{
-				return new FileInfo(fullPath);
-			}
-			else
-			{
-				return null;
-			}
+			List<string> pathParts = new List<string>(path);
+			pathParts.Add(fileName);
+			string fullPath = String.Join("/", pathParts);
+			FileInfo result = new FileInfo(fullPath);
+			return result.Exists ? result : null;
 		}
 
 		public FileInfo GetTemplateFile(string name, string currentTemplateDirectory = null)
@@ -44,9 +30,9 @@ namespace ZenTemplates
 			string fileName = AppendExtension(name, Configuration.TemplateFileExtension);
 			FileInfo result = LookInDirectory(fileName, Configuration.TemplateRoot);
 			
-			if (result == null)
+			if (result == null && !String.IsNullOrEmpty(currentTemplateDirectory))
 			{
-				result = LookInDirectory(fileName, currentTemplateDirectory);
+				result = LookInDirectory(fileName, Configuration.TemplateRoot, currentTemplateDirectory);
 			}
 
 			return result;
