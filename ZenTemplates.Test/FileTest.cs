@@ -43,7 +43,7 @@ namespace ZenTemplates.Test
 		{
 			FileRepository repo = GetFileRepository();
 
-			FileInfo file = repo.GetTemplateFile("simple");
+			TemplateFile file = repo.LoadTemplateFile("simple");
 			Assert.IsNotNull(file);
 
 			TemplateParser parser = new TemplateParser();

@@ -1,9 +1,6 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ZenTemplates.Configuration;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
+using ZenTemplates.Configuration;
 using ZenTemplates.Parser;
 
 namespace ZenTemplates.Test
@@ -27,7 +24,7 @@ namespace ZenTemplates.Test
 		public void SimpleDerivationTest()
 		{
 			FileRepository repo = GetFileRepository();
-			FileInfo file = repo.GetTemplateFile("Index", "Controller");
+			TemplateFile file = repo.LoadTemplateFile("Index", "Controller");
 
 			TemplateParser parser = new TemplateParser(repo);
 			parser.LoadTemplateFile(file);

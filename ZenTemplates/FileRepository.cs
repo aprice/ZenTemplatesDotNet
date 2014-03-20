@@ -64,6 +64,48 @@ namespace ZenTemplates
 			return result;
 		}
 
+		public TemplateFile LoadTemplateFile(string name, string currentTemplateDirectory = null)
+		{
+			FileInfo file = GetTemplateFile(name, currentTemplateDirectory);
+			return BuildTemplateFile(file);
+		}
+
+		public TemplateFile LoadParentFile(string name, string currentTemplateDirectory = null)
+		{
+			FileInfo file = GetParentFile(name, currentTemplateDirectory);
+			return BuildTemplateFile(file);
+		}
+
+		public TemplateFile LoadSnippetFile(string name, string currentTemplateDirectory = null)
+		{
+			FileInfo file = GetSnippetFile(name, currentTemplateDirectory);
+			return BuildTemplateFile(file);
+		}
+
+		private TemplateFile BuildTemplateFile(FileInfo file)
+		{
+			if (file == null)
+			{
+				return null;
+			}
+
+			string contents;
+			using (FileStream stream = file.OpenRead())
+			{
+				using (StreamReader reader = new StreamReader(stream))
+				{
+					contents = reader.ReadToEnd();
+				}
+			}
+
+			return new TemplateFile()
+			{
+				TemplateName = file.Name.Substring(0, file.Name.LastIndexOf('.')),
+				TemplateDirectory = file.DirectoryName,
+				TemplateContents = contents
+			};
+		}
+
 		private string AppendExtension(string name, string extension)
 		{
 			if (name.EndsWith(extension))

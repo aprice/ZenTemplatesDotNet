@@ -2,7 +2,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using ZenTemplates.Parser.Context;
 
@@ -13,7 +12,16 @@ namespace ZenTemplates.Parser
 	/// </summary>
 	public class TemplateParser : TemplateParser<IDictionary<string, object>>
 	{
-		public TemplateParser() : this(null) { }
+		public static TemplateParser GetTemplateParser(string name, string directory = null)
+		{
+			FileRepository repo = new FileRepository();
+			TemplateFile file = repo.LoadTemplateFile(name, directory);
+			TemplateParser parser = new TemplateParser(repo);
+			parser.LoadTemplateFile(file);
+			return parser;
+		}
+
+		public TemplateParser() : this(new FileRepository()) { }
 
 		public TemplateParser(FileRepository fileRepo)
 			: base(fileRepo)
@@ -28,6 +36,15 @@ namespace ZenTemplates.Parser
 	/// <typeparam name="TModel">Model type</typeparam>
 	public class TemplateParser<TModel>
 	{
+		public static TemplateParser<T> GetTemplateParser<T>(string name, string directory = null)
+		{
+			FileRepository repo = new FileRepository();
+			TemplateFile file = repo.LoadTemplateFile(name, directory);
+			TemplateParser<T> parser = new TemplateParser<T>(repo);
+			parser.LoadTemplateFile(file);
+			return parser;
+		}
+
 		private HtmlDocument Document;
 		private ModelContext RootModelContext;
 		private FileRepository FileRepository;
@@ -46,7 +63,7 @@ namespace ZenTemplates.Parser
 			}
 		}
 
-		public TemplateParser() : this(null) { }
+		public TemplateParser() : this(new FileRepository()) { }
 
 		public TemplateParser(FileRepository fileRepo)
 		{
@@ -73,20 +90,10 @@ namespace ZenTemplates.Parser
 		/// Load a template from an HTML file reference.
 		/// </summary>
 		/// <param name="file">Reference to a file containing template content</param>
-		public void LoadTemplateFile(FileInfo file)
+		public void LoadTemplateFile(TemplateFile file)
 		{
-			string contents;
-			using (FileStream stream = file.OpenRead())
-			{
-				using (StreamReader reader = new StreamReader(stream))
-				{
-					contents = reader.ReadToEnd();
-				}
-			}
-
-			LoadTemplateHtml(contents);
-
-			CurrentTemplateDir = file.FullName;
+			LoadTemplateHtml(file.TemplateContents);
+			CurrentTemplateDir = file.TemplateDirectory;
 		}
 
 		/// <summary>
@@ -115,7 +122,7 @@ namespace ZenTemplates.Parser
 				return;
 			}
 
-			FileInfo parentFile = FileRepository.GetParentFile(attribute.Value, CurrentTemplateDir);
+			TemplateFile parentFile = FileRepository.LoadParentFile(attribute.Value, CurrentTemplateDir);
 			attribute.Remove();
 			if (parentFile == null)
 			{
