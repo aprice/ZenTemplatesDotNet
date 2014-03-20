@@ -16,6 +16,10 @@ namespace ZenTemplates.Parser
 		{
 			FileRepository repo = new FileRepository();
 			TemplateFile file = repo.LoadTemplateFile(name, directory);
+			if (file == null)
+			{
+				return null;
+			}
 			TemplateParser parser = new TemplateParser(repo);
 			parser.LoadTemplateFile(file);
 			return parser;
@@ -40,6 +44,10 @@ namespace ZenTemplates.Parser
 		{
 			FileRepository repo = new FileRepository();
 			TemplateFile file = repo.LoadTemplateFile(name, directory);
+			if (file == null)
+			{
+				return null;
+			}
 			TemplateParser<T> parser = new TemplateParser<T>(repo);
 			parser.LoadTemplateFile(file);
 			return parser;
@@ -116,7 +124,7 @@ namespace ZenTemplates.Parser
 
 		private void HandleDerivation()
 		{
-			HtmlNode htmlElement = Document.DocumentNode.LastChild;
+			HtmlNode htmlElement = Document.DocumentNode.ChildNodes.First(n => n.Name == "html");
 			HtmlAttribute attribute = htmlElement.Attributes["data-z-derivesfrom"];
 			string parentName = null;
 			if (attribute != null)

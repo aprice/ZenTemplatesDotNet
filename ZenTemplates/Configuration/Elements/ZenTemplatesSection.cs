@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Configuration;
 
 namespace ZenTemplates.Configuration.Elements
 {
@@ -26,7 +20,7 @@ namespace ZenTemplates.Configuration.Elements
 
 	class TemplatesElement : ConfigurationElement
 	{
-		[ConfigurationProperty("rootPath", DefaultValue = "/")]
+		[ConfigurationProperty("rootPath", DefaultValue = ".")]
 		public string RootPath
 		{
 			get
@@ -36,6 +30,19 @@ namespace ZenTemplates.Configuration.Elements
 			set
 			{
 				base["rootPath"] = value;
+			}
+		}
+
+		[ConfigurationProperty("sharedRootPath", DefaultValue = ".")]
+		public string SharedRootPath
+		{
+			get
+			{
+				return (string)base["sharedRootPath"];
+			}
+			set
+			{
+				base["sharedRootPath"] = value;
 			}
 		}
 

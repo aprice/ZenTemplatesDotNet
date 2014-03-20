@@ -24,12 +24,13 @@ namespace ZenTemplates.Configuration
 			ZenTemplatesSection section = (ZenTemplatesSection)ConfigurationManager.GetSection("zenTemplates");
 			if (section != null && section.Templates != null)
 			{
-				TemplateRoot = SharedRoot = section.Templates.RootPath;
+				TemplateRoot = section.Templates.RootPath;
+				SharedRoot = section.Templates.SharedRootPath;
 				TemplateFileExtension = SnippetFileExtension = section.Templates.Extension;
 			}
 			else
 			{
-				TemplateRoot = SharedRoot = "/";
+				TemplateRoot = SharedRoot = "..";
 				TemplateFileExtension = SnippetFileExtension = ".html";
 			}
 		}
