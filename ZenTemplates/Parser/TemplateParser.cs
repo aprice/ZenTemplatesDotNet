@@ -135,7 +135,6 @@ namespace ZenTemplates.Parser
 
 			// Handle overrides
 			IEnumerable<HtmlNode> allIds = GetAllByAttribute("id");
-
 			foreach (HtmlNode el in allIds)
 			{
 				HtmlNode parentElement = parentParser.Document.GetElementbyId(el.Id);
@@ -146,6 +145,27 @@ namespace ZenTemplates.Parser
 			}
 
 			// Handle appends
+			IEnumerable<HtmlNode> allAppends = GetAllByAttribute("data-z-append");
+			foreach (HtmlNode el in allAppends)
+			{
+				string[] parts = el.Attributes["data-z-append"].Value.Split(new char[]{':'}, 2);
+				el.Attributes["data-z-append"].Remove();
+				string where = parts.Length > 1 ? parts[0].ToLower() : "after";
+				string targetId = parts.Last();
+				HtmlNode targetSibling = parentParser.Document.GetElementbyId(targetId);
+				if (targetSibling == null)
+				{
+					continue;
+				}
+				else if (where == "before")
+				{
+					targetSibling.ParentNode.InsertBefore(el.CloneNode(true), targetSibling);
+				}
+				else if (where == "after")
+				{
+					targetSibling.ParentNode.InsertAfter(el.CloneNode(true), targetSibling);
+				}
+			}
 
 			// Replace Document
 			Document = parentParser.Document;
@@ -244,14 +264,13 @@ namespace ZenTemplates.Parser
 				return;
 			}
 
-			attribute = element.Attributes["class"];
-			if (attribute != null)
+			string[] classes = GetClasses(element);
+			if (classes.Length > 0)
 			{
-				string firstClass = attribute.Value.Split(' ')[0];
-				object propertyValue = docContext.GetProperty(firstClass);
+				object propertyValue = docContext.GetProperty(classes[0]);
 				if (propertyValue != null)
 				{
-					Inject(docContext, docContext.GetProperty(attribute.Value));
+					Inject(docContext, propertyValue);
 					return;
 				}
 			}
@@ -366,6 +385,19 @@ namespace ZenTemplates.Parser
 					&& el.Attributes[attributeName].Value == value
 				select el;
 			return matchingElements;
+		}
+
+		private string[] GetClasses(HtmlNode element)
+		{
+			HtmlAttribute attribute = element.Attributes["class"];
+			if (attribute != null)
+			{
+				return attribute.Value.Split(' ');
+			}
+			else
+			{
+				return new string[0];
+			}
 		}
 	}
 }
