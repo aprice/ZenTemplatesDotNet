@@ -21,8 +21,7 @@ namespace ZenTemplates.Configuration
 		}
 
 		public string TemplateRoot { get; set; }
-		public string ParentRoot { get; set; }
-		public string SnippetRoot { get; set; }
+		public string SharedRoot { get; set; }
 		public string TemplateFileExtension { get; set; }
 		public string SnippetFileExtension { get; set; }
 
@@ -31,12 +30,12 @@ namespace ZenTemplates.Configuration
 			ZenTemplatesSection section = (ZenTemplatesSection)ConfigurationManager.GetSection("zenTemplates");
 			if (section != null && section.Templates != null)
 			{
-				TemplateRoot = ParentRoot = SnippetRoot = section.Templates.RootPath;
+				TemplateRoot = SharedRoot = section.Templates.RootPath;
 				TemplateFileExtension = SnippetFileExtension = section.Templates.Extension;
 			}
 			else
 			{
-				TemplateRoot = ParentRoot = SnippetRoot = "/";
+				TemplateRoot = SharedRoot = "/";
 				TemplateFileExtension = SnippetFileExtension = ".html";
 			}
 		}

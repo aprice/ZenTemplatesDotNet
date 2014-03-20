@@ -41,7 +41,7 @@ namespace ZenTemplates
 		public FileInfo GetParentFile(string name, string currentTemplateDirectory = null)
 		{
 			string fileName = AppendExtension(name, Configuration.TemplateFileExtension);
-			FileInfo result = LookInDirectory(fileName, Configuration.ParentRoot);
+			FileInfo result = LookInDirectory(fileName, Configuration.SharedRoot);
 
 			if (result == null)
 			{
@@ -54,7 +54,7 @@ namespace ZenTemplates
 		public FileInfo GetSnippetFile(string name, string currentTemplateDirectory = null)
 		{
 			string fileName = AppendExtension(name, Configuration.SnippetFileExtension);
-			FileInfo result = LookInDirectory(fileName, Configuration.SnippetRoot);
+			FileInfo result = LookInDirectory(fileName, Configuration.SharedRoot);
 
 			if (result == null)
 			{

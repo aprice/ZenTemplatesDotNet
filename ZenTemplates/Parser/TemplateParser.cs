@@ -13,8 +13,10 @@ namespace ZenTemplates.Parser
 	/// </summary>
 	public class TemplateParser : TemplateParser<IDictionary<string, object>>
 	{
-		public TemplateParser()
-			: base()
+		public TemplateParser() : this(null) { }
+
+		public TemplateParser(FileRepository fileRepo)
+			: base(fileRepo)
 		{
 			Model = new Dictionary<string, object>();
 		}
@@ -28,6 +30,8 @@ namespace ZenTemplates.Parser
 	{
 		private HtmlDocument Document;
 		private ModelContext RootModelContext;
+		private FileRepository FileRepository;
+		private string CurrentTemplateDir;
 		private TModel _model;
 		public TModel Model
 		{
@@ -42,7 +46,9 @@ namespace ZenTemplates.Parser
 			}
 		}
 
-		public TemplateParser()
+		public TemplateParser() : this(null) { }
+
+		public TemplateParser(FileRepository fileRepo)
 		{
 			Document = new HtmlDocument()
 			{
@@ -50,6 +56,8 @@ namespace ZenTemplates.Parser
 				OptionFixNestedTags = true,
 				OptionWriteEmptyNodes = true
 			};
+
+			FileRepository = fileRepo;
 		}
 
 		/// <summary>
@@ -77,6 +85,8 @@ namespace ZenTemplates.Parser
 			}
 
 			LoadTemplateHtml(contents);
+
+			CurrentTemplateDir = file.FullName;
 		}
 
 		/// <summary>
@@ -88,22 +98,6 @@ namespace ZenTemplates.Parser
 			HandleInjection();
 		}
 
-		private void HandleDerivation()
-		{
-			// Check for derivation
-
-			// Load parent template
-
-			// Execute parent derivation
-
-			// Handle overrides
-
-			// Handle appends
-
-			// Replace Document
-
-		}
-
 		/// <summary>
 		/// Return the transformed document as a string.
 		/// </summary>
@@ -111,6 +105,43 @@ namespace ZenTemplates.Parser
 		public string GetOutput()
 		{
 			return Document.DocumentNode.OuterHtml;
+		}
+
+		private void HandleDerivation()
+		{
+			HtmlAttribute attribute = Document.DocumentNode.LastChild.Attributes["data-z-derivesfrom"];
+			if (attribute == null)
+			{
+				return;
+			}
+
+			FileInfo parentFile = FileRepository.GetParentFile(attribute.Value, CurrentTemplateDir);
+			attribute.Remove();
+			if (parentFile == null)
+			{
+				return;
+			}
+
+			TemplateParser parentParser = new TemplateParser();
+			parentParser.LoadTemplateFile(parentFile);
+			parentParser.HandleDerivation();
+
+			// Handle overrides
+			IEnumerable<HtmlNode> allIds = GetAllByAttribute("id");
+
+			foreach (HtmlNode el in allIds)
+			{
+				HtmlNode parentElement = parentParser.Document.GetElementbyId(el.Id);
+				if (parentElement != null)
+				{
+					parentElement.ParentNode.ReplaceChild(el.CloneNode(true), parentElement);
+				}
+			}
+
+			// Handle appends
+
+			// Replace Document
+			Document = parentParser.Document;
 		}
 
 		private void HandleInjection()
@@ -146,11 +177,11 @@ namespace ZenTemplates.Parser
 
 					if (!String.IsNullOrEmpty(id))
 					{
-						IEnumerable<HtmlNode> allElements = Document.DocumentNode.Descendants();
+						IEnumerable<HtmlNode> allElements = GetAllElements();
 						IEnumerable<HtmlNode> allElses =
 							from el in allElements
-							where el.NodeType == HtmlNodeType.Element
-								 && ((el.Attributes["data-z-else"] != null && el.Attributes["data-z-else"].Value == id) || el.Id == id)
+							where el.Id == id
+								|| (el.Attributes["data-z-else"] != null && el.Attributes["data-z-else"].Value == id)
 							select el;
 						foreach (HtmlNode el in allElses)
 						{
@@ -261,6 +292,32 @@ namespace ZenTemplates.Parser
 			{
 				attribute.Value = subsParser.Substitute(attribute.Value);
 			}
+		}
+
+		private IEnumerable<HtmlNode> GetAllElements()
+		{
+			return Document.DocumentNode.Descendants().Where(n => n.NodeType == HtmlNodeType.Element);
+		}
+
+		private IEnumerable<HtmlNode> GetAllByAttribute(string attributeName)
+		{
+			IEnumerable<HtmlNode> allElements = GetAllElements();
+			IEnumerable<HtmlNode> matchingElements =
+				from el in allElements
+				where el.Attributes[attributeName] != null
+				select el;
+			return matchingElements;
+		}
+
+		private IEnumerable<HtmlNode> GetAllByAttribute(string attributeName, string value)
+		{
+			IEnumerable<HtmlNode> allElements = GetAllElements();
+			IEnumerable<HtmlNode> matchingElements =
+				from el in allElements
+				where el.Attributes[attributeName] != null
+					&& el.Attributes[attributeName].Value == value
+				select el;
+			return matchingElements;
 		}
 	}
 }

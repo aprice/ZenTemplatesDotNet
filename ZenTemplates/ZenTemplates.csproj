@@ -34,6 +34,7 @@
       <HintPath>..\packages\HtmlAgilityPack.1.4.6\lib\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -42,6 +43,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\Elements\ZenTemplatesSection.cs" />
+    <Compile Include="Configuration\ZenTemplatesConfiguration.cs" />
     <Compile Include="FileRepository.cs" />
     <Compile Include="Parser\BooleanParser.cs" />
     <Compile Include="Parser\Context\DocumentContext.cs" />
@@ -53,12 +56,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ZenTemplates.Configuration\ZenTemplates.Configuration.csproj">
-      <Project>{1b9d8a6f-0797-467b-90e0-b40c2146b8c8}</Project>
-      <Name>ZenTemplates.Configuration</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

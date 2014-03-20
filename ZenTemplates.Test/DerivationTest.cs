@@ -16,6 +16,7 @@ namespace ZenTemplates.Test
 			ZenTemplatesConfiguration config = new ZenTemplatesConfiguration()
 			{
 				TemplateRoot = "../../Templates/Sample",
+				SharedRoot = "../../Templates/Sample/Shared",
 				TemplateFileExtension = ".html",
 			};
 
@@ -28,7 +29,7 @@ namespace ZenTemplates.Test
 			FileRepository repo = GetFileRepository();
 			FileInfo file = repo.GetTemplateFile("Index", "Controller");
 
-			TemplateParser parser = new TemplateParser();
+			TemplateParser parser = new TemplateParser(repo);
 			parser.LoadTemplateFile(file);
 			parser.Render();
 			string result = parser.GetOutput();
