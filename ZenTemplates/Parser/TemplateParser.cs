@@ -116,14 +116,26 @@ namespace ZenTemplates.Parser
 
 		private void HandleDerivation()
 		{
-			HtmlAttribute attribute = Document.DocumentNode.LastChild.Attributes["data-z-derivesfrom"];
-			if (attribute == null)
+			HtmlNode htmlElement = Document.DocumentNode.LastChild;
+			HtmlAttribute attribute = htmlElement.Attributes["data-z-derivesfrom"];
+			string parentName = null;
+			if (attribute != null)
+			{
+				parentName = attribute.Value;
+				attribute.Remove();
+			}
+			else if (htmlElement.Attributes["class"] != null)
+			{
+				string[] classes = GetClasses(htmlElement);
+				parentName = classes[0];
+			}
+
+			if (String.IsNullOrEmpty(parentName))
 			{
 				return;
 			}
 
-			TemplateFile parentFile = FileRepository.LoadParentFile(attribute.Value, CurrentTemplateDir);
-			attribute.Remove();
+			TemplateFile parentFile = FileRepository.LoadParentFile(parentName, CurrentTemplateDir);
 			if (parentFile == null)
 			{
 				return;
