@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="ConditionalTest.cs" />
     <Compile Include="DerivationTest.cs" />
+    <Compile Include="InferenceTest.cs" />
     <Compile Include="InjectionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SubstitutionTest.cs" />

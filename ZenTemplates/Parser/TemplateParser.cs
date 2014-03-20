@@ -102,7 +102,7 @@ namespace ZenTemplates.Parser
 		public void Render()
 		{
 			HandleDerivation();
-			HandleInjection();
+			ProcessElements();
 		}
 
 		/// <summary>
@@ -151,7 +151,7 @@ namespace ZenTemplates.Parser
 			Document = parentParser.Document;
 		}
 
-		private void HandleInjection()
+		private void ProcessElements()
 		{
 			DocumentContext rootDocContext = new DocumentContext(RootModelContext, Document.DocumentNode);
 			HandleElement(rootDocContext);
@@ -159,13 +159,25 @@ namespace ZenTemplates.Parser
 
 		private void HandleElement(DocumentContext docContext)
 		{
+			if (HandleConditionals(docContext))
+			{
+				HandleInjection(docContext);
+			}
+		}
+
+		/// <summary>
+		/// Handle conditionals for an element
+		/// </summary>
+		/// <returns>True if element survived, false if it was removed</returns>
+		private bool HandleConditionals(DocumentContext docContext)
+		{
 			HtmlNode element = docContext.Element;
 			HtmlAttribute attribute;
 			attribute = element.Attributes["data-z-lorem"];
 			if (attribute != null)
 			{
 				element.Remove();
-				return;
+				return false;
 			}
 
 			attribute = element.Attributes["data-z-if"];
@@ -204,7 +216,7 @@ namespace ZenTemplates.Parser
 				else
 				{
 					element.Remove();
-					return;
+					return false;
 				}
 			}
 			else
@@ -217,16 +229,45 @@ namespace ZenTemplates.Parser
 				}
 			}
 
-			bool injecting = false;
+			return true;
+		}
+
+		private void HandleInjection(DocumentContext docContext)
+		{
+			HtmlNode element = docContext.Element;
+			HtmlAttribute attribute;
 			attribute = element.Attributes["data-z-inject"];
 			if (attribute != null)
 			{
-				injecting = true;
 				attribute.Remove();
 				Inject(docContext, docContext.GetProperty(attribute.Value));
+				return;
 			}
 
-			if (!injecting && element.HasChildNodes)
+			attribute = element.Attributes["class"];
+			if (attribute != null)
+			{
+				string firstClass = attribute.Value.Split(' ')[0];
+				object propertyValue = docContext.GetProperty(firstClass);
+				if (propertyValue != null)
+				{
+					Inject(docContext, docContext.GetProperty(attribute.Value));
+					return;
+				}
+			}
+
+			attribute = element.Attributes["id"];
+			if (attribute != null)
+			{
+				object propertyValue = docContext.GetProperty(attribute.Value);
+				if (propertyValue != null)
+				{
+					Inject(docContext, docContext.GetProperty(attribute.Value));
+					return;
+				}
+			}
+
+			if (element.HasChildNodes)
 			{
 				HandleChildren(docContext);
 			}
