@@ -55,6 +55,7 @@
     <Compile Include="InferenceTest.cs" />
     <Compile Include="InjectionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SnippetTest.cs" />
     <Compile Include="SubstitutionTest.cs" />
     <Compile Include="BooleanTest.cs" />
     <Compile Include="FileTest.cs" />
@@ -71,11 +72,14 @@
     <Content Include="Templates\Reference\Controller\Implied.html" />
     <Content Include="Templates\Reference\Controller\Index.html" />
     <Content Include="Templates\Sample\Controller\Appenders.html" />
+    <Content Include="Templates\Sample\Controller\ControllerSnippet.html" />
     <Content Include="Templates\Sample\Controller\Implied.html" />
     <Content Include="Templates\Sample\Controller\Index.html" />
     <Content Include="Templates\Reference\simple.html" />
+    <Content Include="Templates\Sample\Shared\GlobalSnippet.html" />
     <Content Include="Templates\Sample\Shared\Master.html" />
     <Content Include="Templates\Sample\simple.html" />
+    <Content Include="Templates\Sample\testSnippet.html" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

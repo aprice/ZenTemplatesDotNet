@@ -12,10 +12,10 @@ namespace ZenTemplates.Parser
 	/// </summary>
 	public class TemplateParser : TemplateParser<IDictionary<string, object>>
 	{
-		public static TemplateParser GetTemplateParser(string name, string directory = null)
+		public static TemplateParser GetTemplateParser(string path, FileRepository repository = null)
 		{
-			FileRepository repo = new FileRepository();
-			TemplateFile file = repo.LoadTemplateFile(name, directory);
+			FileRepository repo = repository ?? new FileRepository();
+			TemplateFile file = repo.LoadTemplateFile(path);
 			if (file == null)
 			{
 				return null;
@@ -40,10 +40,10 @@ namespace ZenTemplates.Parser
 	/// <typeparam name="TModel">Model type</typeparam>
 	public class TemplateParser<TModel>
 	{
-		public static TemplateParser<T> GetTemplateParser<T>(string name, string directory = null)
+		public static TemplateParser<T> GetTemplateParser<T>(string path, FileRepository repository = null)
 		{
-			FileRepository repo = new FileRepository();
-			TemplateFile file = repo.LoadTemplateFile(name, directory);
+			FileRepository repo = repository ?? new FileRepository();
+			TemplateFile file = repo.LoadTemplateFile(path);
 			if (file == null)
 			{
 				return null;
@@ -56,7 +56,7 @@ namespace ZenTemplates.Parser
 		private HtmlDocument Document;
 		private ModelContext RootModelContext;
 		private FileRepository FileRepository;
-		private string CurrentTemplateDir;
+		private string CurrentTemplateDirectory;
 		private TModel _model;
 		public TModel Model
 		{
@@ -101,7 +101,7 @@ namespace ZenTemplates.Parser
 		public void LoadTemplateFile(TemplateFile file)
 		{
 			LoadTemplateHtml(file.TemplateContents);
-			CurrentTemplateDir = file.TemplateDirectory;
+			CurrentTemplateDirectory = file.TemplateDirectory;
 		}
 
 		/// <summary>
@@ -143,7 +143,7 @@ namespace ZenTemplates.Parser
 				return;
 			}
 
-			TemplateFile parentFile = FileRepository.LoadParentFile(parentName, CurrentTemplateDir);
+			TemplateFile parentFile = FileRepository.LoadParentFile(parentName, CurrentTemplateDirectory);
 			if (parentFile == null)
 			{
 				return;
@@ -201,7 +201,28 @@ namespace ZenTemplates.Parser
 		{
 			if (HandleConditionals(docContext))
 			{
+				HandleSnippets(docContext);
 				HandleInjection(docContext);
+			}
+		}
+
+		private void HandleSnippets(DocumentContext docContext)
+		{
+			HtmlNode element = docContext.Element;
+			HtmlAttribute attribute;
+			attribute = element.Attributes["data-z-snippet"];
+			if (attribute == null)
+			{
+				return;
+			}
+
+			string snippetName = attribute.Value;
+			attribute.Remove();
+
+			TemplateFile snippetFile = FileRepository.LoadSnippetFile(snippetName, CurrentTemplateDirectory);
+			if (snippetFile != null)
+			{
+				docContext.Element.InnerHtml = snippetFile.TemplateContents;
 			}
 		}
 

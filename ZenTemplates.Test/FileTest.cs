@@ -13,6 +13,7 @@ namespace ZenTemplates.Test
 			ZenTemplatesConfiguration config = new ZenTemplatesConfiguration()
 			{
 				TemplateRoot = "../../Templates/Sample",
+				SharedRoot = "../../Templates/Sample/Shared",
 				TemplateFileExtension = ".html",
 			};
 
@@ -35,6 +36,15 @@ namespace ZenTemplates.Test
 			Assert.IsNotNull(file);
 
 			file = repo.GetTemplateFile("simple", "Controller");
+			Assert.IsNotNull(file);
+
+			file = repo.GetParentFile("Master", "Controller");
+			Assert.IsNotNull(file);
+
+			file = repo.GetSnippetFile("GlobalSnippet", "Controller");
+			Assert.IsNotNull(file);
+
+			file = repo.GetSnippetFile("ControllerSnippet", "Controller");
 			Assert.IsNotNull(file);
 		}
 
