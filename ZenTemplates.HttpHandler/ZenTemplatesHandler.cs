@@ -16,8 +16,11 @@ namespace ZenTemplates.HttpHandler
 
 		public void ProcessRequest(HttpContext context)
 		{
-			string path = context.Request.Path.Trim('/');
-			TemplateParser<object> parser = TemplateParser.GetTemplateParser<object>(path);
+			Directory.SetCurrentDirectory(context.Request.PhysicalApplicationPath);
+			ZenTemplatesConfiguration config = new ZenTemplatesConfiguration();
+			FileRepository repo = new FileRepository(config);
+			string path = context.Request.AppRelativeCurrentExecutionFilePath.Substring(2);
+			TemplateParser parser = TemplateParser.GetTemplateParser(path, repo);
 			if (parser == null)
 			{
 				context.Response.StatusCode = 404;
@@ -25,21 +28,10 @@ namespace ZenTemplates.HttpHandler
 			else
 			{
 				string modelFile = path.Substring(0, path.LastIndexOf('.')) + ".json";
-				object model = LoadModelJson(modelFile);
+				IDictionary<string, object> model = LoadModelJson(repo.GetModelFile(modelFile));
 				if (model == null)
 				{
-					string modelDir = modelFile.Contains("/") ? modelFile.Substring(0, modelFile.LastIndexOf("/")) : ".";
-					model = LoadModelJson(modelDir + "global.json");
-				}
-
-				if (model == null)
-				{
-					model = LoadModelJson(ZenTemplatesConfiguration.Current.SharedRoot + "/global.json");
-				}
-
-				if (model == null)
-				{
-					model = LoadModelJson(ZenTemplatesConfiguration.Current.TemplateRoot + "/global.json");
+					model = LoadModelJson(repo.GetModelFile("global.json"));
 				}
 
 				if (model != null)
@@ -53,13 +45,13 @@ namespace ZenTemplates.HttpHandler
 			}
 		}
 
-		private object LoadModelJson(string fileName)
+		private IDictionary<string, object> LoadModelJson(FileInfo file)
 		{
-			object model = null;
-			if (File.Exists(fileName))
+			IDictionary<string, object> model = null;
+			if (file != null && file.Exists)
 			{
 				string rawJson;
-				using (FileStream stream = File.OpenRead(fileName))
+				using (FileStream stream = file.OpenRead())
 				{
 					using (StreamReader reader = new StreamReader(stream))
 					{

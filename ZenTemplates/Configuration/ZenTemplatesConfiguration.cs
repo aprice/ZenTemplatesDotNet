@@ -5,15 +5,6 @@ namespace ZenTemplates.Configuration
 {
     public class ZenTemplatesConfiguration
     {
-		private static ZenTemplatesConfiguration _current = new ZenTemplatesConfiguration();
-		public static ZenTemplatesConfiguration Current
-		{
-			get
-			{
-				return _current;
-			}
-		}
-
 		public string TemplateRoot { get; set; }
 		public string SharedRoot { get; set; }
 		public string TemplateFileExtension { get; set; }

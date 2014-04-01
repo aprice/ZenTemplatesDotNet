@@ -49,6 +49,20 @@ namespace ZenTemplates.Test
 		}
 
 		[TestMethod]
+		public void ModelLookupTest()
+		{
+			FileRepository repo = GetFileRepository();
+			FileInfo file;
+
+			file = repo.GetModelFile("simple");
+			Assert.IsNotNull(file);
+			Assert.AreEqual("simple.json", file.Name);
+
+			file = repo.GetTemplateFile("nonexistant");
+			Assert.IsNull(file);
+		}
+
+		[TestMethod]
 		public void SimpleFileTest()
 		{
 			FileRepository repo = GetFileRepository();

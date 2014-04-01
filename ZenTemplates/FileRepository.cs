@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using ZenTemplates.Configuration;
 
 namespace ZenTemplates
@@ -101,6 +102,35 @@ namespace ZenTemplates
 		}
 
 		/// <summary>
+		/// Get a reference to a model file by name.
+		/// </summary>
+		/// <param name="name">Name of the model file, with or without file extension</param>
+		/// <param name="currentTemplateDirectory">Directory to search, relative to template root</param>
+		/// <returns>FileInfo referring to the requested file, or null if file was not found</returns>
+		public FileInfo GetModelFile(string name, string currentTemplateDirectory = null)
+		{
+			string fileName = AppendExtension(name, ".json");
+			FileInfo result = LookInDirectory(fileName);
+
+			if (result == null && !String.IsNullOrEmpty(currentTemplateDirectory))
+			{
+				result = LookInDirectory(fileName, Configuration.TemplateRoot, currentTemplateDirectory);
+			}
+
+			if (result == null)
+			{
+				result = LookInDirectory(fileName, Configuration.SharedRoot);
+			}
+
+			if (result == null)
+			{
+				result = LookInDirectory(fileName, Configuration.TemplateRoot);
+			}
+
+			return result;
+		}
+
+		/// <summary>
 		/// Load a template file by name.
 		/// </summary>
 		/// <param name="name">Name of the snippet file, with or without file extension</param>
@@ -138,11 +168,21 @@ namespace ZenTemplates
 
 		private FileInfo LookInDirectory(string fileName, params string[] path)
 		{
-			List<string> pathParts = new List<string>(path);
-			pathParts.Add(fileName);
-			string fullPath = String.Join("/", pathParts);
+			string fullPath = BuildPath(path, fileName);
 			FileInfo result = new FileInfo(fullPath);
 			return result.Exists ? result : null;
+		}
+
+		private string BuildPath(string[] parts, params string[] moreParts)
+		{
+			List<string> pathParts = new List<string>(parts);
+			pathParts.AddRange(moreParts);
+			for (int i = 0; i < pathParts.Count; i++)
+			{
+				pathParts[i] = pathParts[i].Trim('/');
+			}
+			pathParts = pathParts.Where(s => !String.IsNullOrEmpty(s)).ToList();
+			return String.Join("/", pathParts);
 		}
 
 		private TemplateFile BuildTemplateFile(FileInfo file)
