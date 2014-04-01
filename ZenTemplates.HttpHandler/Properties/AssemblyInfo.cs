@@ -6,8 +6,8 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("ZenTemplates.HttpHandler")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("Basic HttpHandler for standalone templates in IIS")]
+[assembly: AssemblyDescription("Basic HttpHandler for standalone templates in IIS.")]
+[assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Zen Templates")]
 [assembly: AssemblyCopyright("Copyright ©  2014 Adrian Price")]

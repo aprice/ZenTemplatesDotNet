@@ -6,8 +6,8 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("ZenTemplates.Test")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("Unit tests for the template engine")]
+[assembly: AssemblyDescription("Unit tests for the template engine")]
+[assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Zen Templates")]
 [assembly: AssemblyCopyright("Copyright ©  2014 Adrian Price")]
