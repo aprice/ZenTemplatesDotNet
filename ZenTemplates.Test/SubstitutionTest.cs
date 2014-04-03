@@ -96,5 +96,57 @@ namespace ZenTemplates.Test
 			string result = parser.GetOutput();
 			Assert.AreEqual(outHtml, result);
 		}
+
+		[TestMethod]
+		public void EscapedSubstitutionTest()
+		{
+			string inHtml = @"<!DOCTYPE html>
+<html><head><title>Test document</title></head>
+<body><p>Test \${testData}</p></body></html>";
+			string outHtml = @"<!DOCTYPE html>
+<html><head><title>Test document</title></head>
+<body><p>Test ${testData}</p></body></html>";
+
+			TemplateParser parser = new TemplateParser();
+			parser.LoadTemplateHtml(inHtml);
+			parser.Render();
+			string result = parser.GetOutput();
+			Assert.AreEqual(outHtml, result);
+		}
+
+		[TestMethod]
+		public void UnEscapedSubstitutionTest()
+		{
+			string inHtml = @"<!DOCTYPE html>
+<html><head><title>Test document</title></head>
+<body><p>Test \\${testData}</p></body></html>";
+			string outHtml = @"<!DOCTYPE html>
+<html><head><title>Test document</title></head>
+<body><p>Test \data</p></body></html>";
+
+			TemplateParser parser = new TemplateParser();
+			parser.Model["testData"] = "data";
+			parser.LoadTemplateHtml(inHtml);
+			parser.Render();
+			string result = parser.GetOutput();
+			Assert.AreEqual(outHtml, result);
+		}
+
+		[TestMethod]
+		public void MultiEscapedSubstitutionTest()
+		{
+			string inHtml = @"<!DOCTYPE html>
+<html><head><title>Test document</title></head>
+<body><p>Test \\\${testData}</p></body></html>";
+			string outHtml = @"<!DOCTYPE html>
+<html><head><title>Test document</title></head>
+<body><p>Test \${testData}</p></body></html>";
+
+			TemplateParser parser = new TemplateParser();
+			parser.LoadTemplateHtml(inHtml);
+			parser.Render();
+			string result = parser.GetOutput();
+			Assert.AreEqual(outHtml, result);
+		}
 	}
 }

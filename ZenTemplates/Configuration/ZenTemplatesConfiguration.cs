@@ -17,7 +17,8 @@ namespace ZenTemplates.Configuration
 			{
 				TemplateRoot = section.Templates.RootPath;
 				SharedRoot = section.Templates.SharedRootPath;
-				TemplateFileExtension = SnippetFileExtension = section.Templates.Extension;
+				TemplateFileExtension = section.Templates.Extension;
+				SnippetFileExtension = section.Templates.SnippetExtension;
 			}
 			else
 			{

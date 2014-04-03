@@ -111,6 +111,7 @@ namespace ZenTemplates.Parser
 		{
 			HandleDerivation();
 			ProcessElements();
+			Document.DocumentNode.InnerHtml = SubstitutionParser.ResolveEscapes(Document.DocumentNode.InnerHtml);
 		}
 
 		/// <summary>

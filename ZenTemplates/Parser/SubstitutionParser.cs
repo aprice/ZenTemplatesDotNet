@@ -14,7 +14,7 @@ namespace ZenTemplates.Parser
 			Lookup = context;
 		}
 
-		private static readonly Regex TokenRegex = new Regex(@"(^|[^\\])(?:\\\\)*(\$\{[^}]+\})");
+		private static readonly Regex TokenRegex = new Regex(@"(^|[^\\])(\\\\)*(\$\{[^}]+\})");
 		public string Substitute(string input)
 		{
 			if (String.IsNullOrEmpty(input))
@@ -37,6 +37,10 @@ namespace ZenTemplates.Parser
 				{
 					continue;
 				}
+				else if (token.StartsWith("\\"))
+				{
+					sb.Append(token.Substring(0, token.Length / 2));
+				}
 				else if (token.StartsWith("${") && token.EndsWith("}"))
 				{
 					string key = token.Substring(2, token.Length - 3);
@@ -57,6 +61,28 @@ namespace ZenTemplates.Parser
 			}
 
 			return sb.ToString();
+		}
+
+		private static readonly Regex EscapeRegex = new Regex(@"(\\+)\$\{");
+		public static string ResolveEscapes(string input)
+		{
+			if (String.IsNullOrEmpty(input))
+			{
+				return "";
+			}
+			else
+			{
+				return EscapeRegex.Replace(input, EscapeMatchEvaluator);
+			}
+		}
+
+		private static string EscapeMatchEvaluator(Match match)
+		{
+			string slashes = match.Groups[1].Value;
+			StringBuilder result = new StringBuilder((slashes.Length / 2) + 2);
+			result.Append(slashes.Substring(0, slashes.Length / 2));
+			result.Append("${");
+			return result.ToString();
 		}
 	}
 }

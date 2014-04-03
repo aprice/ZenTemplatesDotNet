@@ -58,5 +58,18 @@ namespace ZenTemplates.Configuration.Elements
 				base["extension"] = value;
 			}
 		}
+
+		[ConfigurationProperty("snippetExtension", DefaultValue = ".html")]
+		public string SnippetExtension
+		{
+			get
+			{
+				return (string)base["snippetExtension"];
+			}
+			set
+			{
+				base["snippetExtension"] = value;
+			}
+		}
 	}
 }
