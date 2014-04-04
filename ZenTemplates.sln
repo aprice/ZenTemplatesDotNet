@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZenTemplates.Test", "ZenTem
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZenTemplates.HttpHandler.Test", "ZenTemplates.HttpHandler.Test\ZenTemplates.HttpHandler.Test.csproj", "{A9EBF81F-ED68-4FCC-8FED-C127191DF594}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZenTemplates.Mvc", "ZenTemplates.Mvc\ZenTemplates.Mvc.csproj", "{26817FD5-5AA8-4F96-9C57-8EBB8CF5FD9A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{A9EBF81F-ED68-4FCC-8FED-C127191DF594}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9EBF81F-ED68-4FCC-8FED-C127191DF594}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A9EBF81F-ED68-4FCC-8FED-C127191DF594}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26817FD5-5AA8-4F96-9C57-8EBB8CF5FD9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26817FD5-5AA8-4F96-9C57-8EBB8CF5FD9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26817FD5-5AA8-4F96-9C57-8EBB8CF5FD9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26817FD5-5AA8-4F96-9C57-8EBB8CF5FD9A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
