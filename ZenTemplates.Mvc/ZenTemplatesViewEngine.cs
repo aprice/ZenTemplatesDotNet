@@ -5,6 +5,14 @@ namespace ZenTemplates.Mvc
 {
 	public class ZenTemplatesViewEngine : VirtualPathProviderViewEngine
 	{
+		/// <summary>
+		/// Register ZenTemplatesViewEngine with ASP.NET MVC. Call this method in Application_Start.
+		/// </summary>
+		public static void Register()
+		{
+			ViewEngines.Engines.Add(new ZenTemplatesViewEngine());
+		}
+
 		ZenTemplatesConfiguration config = new ZenTemplatesConfiguration();
 		public ZenTemplatesViewEngine()
 		{

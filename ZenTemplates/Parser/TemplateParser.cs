@@ -298,6 +298,15 @@ namespace ZenTemplates.Parser
 		{
 			HtmlNode element = docContext.Element;
 			HtmlAttribute attribute;
+			attribute = element.Attributes["data-z-noinject"];
+			if (attribute != null)
+			{
+				attribute.Remove();
+				docContext.NoInject = true;
+				HandleSubstitution(docContext);
+				return;
+			}
+
 			attribute = element.Attributes["data-z-inject"];
 			if (attribute != null)
 			{
@@ -306,25 +315,35 @@ namespace ZenTemplates.Parser
 				return;
 			}
 
-			string[] classes = GetClasses(element);
-			if (classes.Length > 0)
-			{
-				object propertyValue = docContext.GetProperty(classes[0]);
-				if (propertyValue != null)
-				{
-					Inject(docContext, propertyValue);
-					return;
-				}
-			}
-
-			attribute = element.Attributes["id"];
+			attribute = element.Attributes["data-z-noinfer"];
 			if (attribute != null)
 			{
-				object propertyValue = docContext.GetProperty(attribute.Value);
-				if (propertyValue != null)
+				attribute.Remove();
+				docContext.NoInfer = true;
+			}
+
+			if (!docContext.NoInfer)
+			{
+				string[] classes = GetClasses(element);
+				if (classes.Length > 0)
 				{
-					Inject(docContext, docContext.GetProperty(attribute.Value));
-					return;
+					object propertyValue = docContext.GetProperty(classes[0]);
+					if (propertyValue != null)
+					{
+						Inject(docContext, propertyValue);
+						return;
+					}
+				}
+
+				attribute = element.Attributes["id"];
+				if (attribute != null)
+				{
+					object propertyValue = docContext.GetProperty(attribute.Value);
+					if (propertyValue != null)
+					{
+						Inject(docContext, docContext.GetProperty(attribute.Value));
+						return;
+					}
 				}
 			}
 
@@ -344,7 +363,7 @@ namespace ZenTemplates.Parser
 			{
 				if (child.NodeType == HtmlNodeType.Element)
 				{
-					DocumentContext childContext = new DocumentContext(docContext.ModelContext, child);
+					DocumentContext childContext = new DocumentContext(docContext, child);
 					HandleElement(childContext);
 				}
 			}
@@ -366,7 +385,7 @@ namespace ZenTemplates.Parser
 			else if (val is IDictionary)
 			{
 				ModelContext modelContext = new ModelContext(val);
-				DocumentContext childContext = new DocumentContext(modelContext, element);
+				DocumentContext childContext = new DocumentContext(docContext, modelContext, element);
 				HandleChildren(childContext);
 			}
 			else if (val is IEnumerable)
@@ -379,7 +398,7 @@ namespace ZenTemplates.Parser
 					parentNode.InsertAfter(newElement, insertAfter);
 					insertAfter = newElement;
 					ModelContext modelContext = new ModelContext(item);
-					DocumentContext childContext = new DocumentContext(modelContext, newElement);
+					DocumentContext childContext = new DocumentContext(docContext, modelContext, newElement);
 					Inject(childContext, item);
 				}
 				element.Remove();
@@ -387,7 +406,7 @@ namespace ZenTemplates.Parser
 			else
 			{
 				ModelContext modelContext = new ModelContext(val);
-				DocumentContext childContext = new DocumentContext(modelContext, element);
+				DocumentContext childContext = new DocumentContext(docContext, modelContext, element);
 				HandleChildren(childContext);
 			}
 		}
