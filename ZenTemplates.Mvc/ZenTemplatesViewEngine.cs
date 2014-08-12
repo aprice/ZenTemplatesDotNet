@@ -13,9 +13,10 @@ namespace ZenTemplates.Mvc
 			ViewEngines.Engines.Add(new ZenTemplatesViewEngine());
 		}
 
-		ZenTemplatesConfiguration config = new ZenTemplatesConfiguration();
+		
 		public ZenTemplatesViewEngine()
 		{
+			ZenTemplatesConfiguration config = new ZenTemplatesConfiguration();
 			this.ViewLocationFormats = new string[]
 			{
 				"~/Views/{1}/{0}" + config.TemplateFileExtension,

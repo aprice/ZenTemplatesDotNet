@@ -34,10 +34,13 @@ namespace ZenTemplates.HttpHandler
 					model = LoadModelJson(repo.GetModelFile("global.json"));
 				}
 
-				if (model != null)
+				if (model == null)
 				{
-					parser.Model = model;
+					model = new Dictionary<string, object>();
 				}
+
+				model["AppSettings"] = config.AppSettingsModel;
+				parser.Model = model;
 
 				parser.Render();
 				context.Response.ContentType = "text/html";
@@ -45,7 +48,7 @@ namespace ZenTemplates.HttpHandler
 			}
 		}
 
-		private IDictionary<string, object> LoadModelJson(FileInfo file)
+		private static IDictionary<string, object> LoadModelJson(FileInfo file)
 		{
 			IDictionary<string, object> model = null;
 			if (file != null && file.Exists)

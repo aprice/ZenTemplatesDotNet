@@ -1,17 +1,26 @@
 <?xml version="1.0"?>
 <package >
-  <metadata>
-	<id>$id$</id>
-	<version>$version$</version>
-	<title>$title$</title>
-	<authors>$author$</authors>
-	<owners>$author$</owners>
-	<licenseUrl>https://raw.githubusercontent.com/aprice/ZenTemplatesDotNet/master/LICENSE</licenseUrl>
-	<projectUrl>https://github.com/aprice/ZenTemplatesDotNet/</projectUrl>
-	<requireLicenseAcceptance>false</requireLicenseAcceptance>
-	<description>$description$</description>
-	<releaseNotes></releaseNotes>
-	<copyright>Copyright 2014 $author$</copyright>
-	<tags>html5, templates, zentemplates</tags>
-  </metadata>
+	<metadata>
+		<id>$id$</id>
+		<version>$version$</version>
+		<title>$title$</title>
+		<authors>$author$</authors>
+		<owners>$author$</owners>
+		<licenseUrl>https://raw.githubusercontent.com/aprice/ZenTemplatesDotNet/master/LICENSE</licenseUrl>
+		<projectUrl>https://github.com/aprice/ZenTemplatesDotNet/</projectUrl>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<description>$description$</description>
+		<releaseNotes></releaseNotes>
+		<copyright>Copyright 2014 $author$</copyright>
+		<tags>html5, templates, zentemplates</tags>
+		<frameworkAssemblies>
+			<frameworkAssembly assemblyName="System.Web" />
+			<frameworkAssembly assemblyName="System.Net" />
+			<frameworkAssembly assemblyName="System.Xml" />
+		</frameworkAssemblies>
+		<dependencies>
+			<dependency id="Json.NET" version="6.0.1" />
+			<dependency id="ZenTemplates" version="1.1.0" />
+		</dependencies>
+	</metadata>
 </package>

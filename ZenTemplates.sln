@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30110.0
+VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZenTemplates", "ZenTemplates\ZenTemplates.csproj", "{BA7E62C0-BFC3-4C78-B632-442FC8F68B3E}"
 EndProject
@@ -12,6 +12,13 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZenTemplates.HttpHandler.Test", "ZenTemplates.HttpHandler.Test\ZenTemplates.HttpHandler.Test.csproj", "{A9EBF81F-ED68-4FCC-8FED-C127191DF594}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZenTemplates.Mvc", "ZenTemplates.Mvc\ZenTemplates.Mvc.csproj", "{26817FD5-5AA8-4F96-9C57-8EBB8CF5FD9A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{934ED998-1330-49DA-9981-0E39BBC47FDB}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

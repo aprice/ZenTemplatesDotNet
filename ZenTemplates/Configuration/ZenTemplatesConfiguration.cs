@@ -9,10 +9,10 @@ namespace ZenTemplates.Configuration
 		public string SharedRoot { get; set; }
 		public string TemplateFileExtension { get; set; }
 		public string SnippetFileExtension { get; set; }
+		public AppSettingsModel AppSettingsModel { get; set; }
 
-		public ZenTemplatesConfiguration()
+		ZenTemplatesConfiguration(ZenTemplatesSection section)
 		{
-			ZenTemplatesSection section = (ZenTemplatesSection)ConfigurationManager.GetSection("zenTemplates");
 			if (section != null && section.Templates != null)
 			{
 				TemplateRoot = section.Templates.RootPath;
@@ -25,6 +25,12 @@ namespace ZenTemplates.Configuration
 				TemplateRoot = SharedRoot = "..";
 				TemplateFileExtension = SnippetFileExtension = ".html";
 			}
+
+			AppSettingsModel = new AppSettingsModel();
 		}
+
+		public ZenTemplatesConfiguration()
+			: this((ZenTemplatesSection)ConfigurationManager.GetSection("zenTemplates"))
+		{ }
     }
 }
