@@ -69,6 +69,15 @@ namespace ZenTemplates.Test
 		}
 
 		[TestMethod]
+		public void TruthinessOfUndefined()
+		{
+			Dictionary<string, object> model = new Dictionary<string, object>();
+			ILookupContext lookup = new ModelContext(model);
+			BooleanParser parser = new BooleanParser(lookup);
+			Assert.IsFalse(parser.Parse("testData"));
+		}
+
+		[TestMethod]
 		public void TruthinessOfZero()
 		{
 			Dictionary<string, object> model = new Dictionary<string, object>();

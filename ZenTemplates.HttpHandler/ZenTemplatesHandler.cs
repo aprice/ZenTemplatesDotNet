@@ -39,7 +39,7 @@ namespace ZenTemplates.HttpHandler
 					model = new Dictionary<string, object>();
 				}
 
-				model["AppSettings"] = config.AppSettingsModel;
+				model["AppSettings"] = config.AppSettingsModel.RootNode;
 				parser.Model = model;
 
 				parser.Render();

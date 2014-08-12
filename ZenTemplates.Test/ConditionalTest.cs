@@ -47,7 +47,7 @@ namespace ZenTemplates.Test
 		{
 			string inHtml = @"<!DOCTYPE html>
 <html><head><title>Test document</title></head>
-<body><p data-z-if=""testData && (testData2 || testData3)"">Test content</p></body></html>";
+<body><p data-z-if=""testData && (testData2 || !testData3)"">Test content</p></body></html>";
 			string outHtml = @"<!DOCTYPE html>
 <html><head><title>Test document</title></head>
 <body><p>Test content</p></body></html>";
@@ -55,7 +55,7 @@ namespace ZenTemplates.Test
 			TemplateParser parser = new TemplateParser();
 			parser.Model["testData"] = true;
 			parser.Model["testData2"] = false;
-			parser.Model["testData3"] = true;
+			parser.Model["testData3"] = false;
 			parser.LoadTemplateHtml(inHtml);
 			parser.Render();
 			string result = parser.GetOutput();
