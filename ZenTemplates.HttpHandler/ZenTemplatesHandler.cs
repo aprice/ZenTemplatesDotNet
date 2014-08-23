@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Web;
 using ZenTemplates.Configuration;
@@ -28,10 +27,10 @@ namespace ZenTemplates.HttpHandler
 			else
 			{
 				string modelFile = path.Substring(0, path.LastIndexOf('.')) + ".json";
-				IDictionary<string, object> model = LoadModelJson(repo.GetModelFile(modelFile));
+				IDictionary<string, object> model = repo.LoadModelJson(modelFile);
 				if (model == null)
 				{
-					model = LoadModelJson(repo.GetModelFile("global.json"));
+					model = repo.LoadModelJson("global.json");
 				}
 
 				if (model == null)
@@ -46,25 +45,6 @@ namespace ZenTemplates.HttpHandler
 				context.Response.ContentType = "text/html";
 				context.Response.Write(parser.GetOutput());
 			}
-		}
-
-		private static IDictionary<string, object> LoadModelJson(FileInfo file)
-		{
-			IDictionary<string, object> model = null;
-			if (file != null && file.Exists)
-			{
-				string rawJson;
-				using (FileStream stream = file.OpenRead())
-				{
-					using (StreamReader reader = new StreamReader(stream))
-					{
-						rawJson = reader.ReadToEnd();
-					}
-				}
-				model = JsonConvert.DeserializeObject<IDictionary<string, object>>(rawJson, new JsonConverter[] { new NestedDictionaryConverter() });
-			}
-
-			return model;
 		}
 	}
 }

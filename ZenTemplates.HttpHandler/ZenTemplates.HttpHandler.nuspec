@@ -15,12 +15,9 @@
 		<tags>html5, templates, zentemplates</tags>
 		<frameworkAssemblies>
 			<frameworkAssembly assemblyName="System.Web" />
-			<frameworkAssembly assemblyName="System.Net" />
-			<frameworkAssembly assemblyName="System.Xml" />
 		</frameworkAssemblies>
 		<dependencies>
-			<dependency id="Newtonsoft.Json" version="6.0.1" />
-			<dependency id="ZenTemplates" version="1.1.0" />
+			<dependency id="ZenTemplates" version="1.1.1" />
 		</dependencies>
 	</metadata>
 </package>

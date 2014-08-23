@@ -1,0 +1,20 @@
+﻿{
+    "pageTitle": "Some Sites",
+    "sites": [
+        {
+            "name": "Zen Templates",
+            "description": "A new approach to HTML templates.",
+            "homepage": "http://www.zentemplates.org/"
+        },
+        {
+            "name": "GitHub",
+            "description": "Free hosting for open-source projects.",
+            "homepage": "http://www.github.org/"
+        },
+        {
+            "name": "Adrian Price",
+            "description": "The guy who wrote this.",
+            "homepage": "http://adrianprice.us/"
+        }
+    ]
+}

@@ -1,4 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
+using System.IO;
+using System.Text.RegularExpressions;
 using ZenTemplates.Parser;
 
 namespace ZenTemplates.Test
@@ -92,6 +95,36 @@ namespace ZenTemplates.Test
 			parser.LoadTemplateHtml(inHtml);
 			parser.Render();
 			string result = parser.GetOutput();
+			Assert.AreEqual(outHtml, result);
+		}
+
+		[TestMethod]
+		public void ComplexListInjectionTest()
+		{
+			FileRepository repo = FileTest.GetFileRepository();
+
+			TemplateFile file = repo.LoadTemplateFile("list");
+			Assert.IsNotNull(file);
+
+			TemplateParser parser = new TemplateParser();
+			parser.LoadTemplateFile(file);
+
+			var model = repo.LoadModelJson("list");
+			parser.Model = model;
+
+			parser.Render();
+			string result = parser.GetOutput();
+
+			string outHtml;
+			using (FileStream stream = File.OpenRead("../../Templates/Reference/list.html"))
+			{
+				using (StreamReader reader = new StreamReader(stream))
+				{
+					outHtml = reader.ReadToEnd();
+				}
+			}
+			result = Regex.Replace(result, @"\s+", "");
+			outHtml = Regex.Replace(outHtml, @"\s+", "");
 			Assert.AreEqual(outHtml, result);
 		}
 	}

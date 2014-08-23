@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Web.Script.Serialization;
 using ZenTemplates.Configuration;
 
 namespace ZenTemplates
@@ -164,6 +165,28 @@ namespace ZenTemplates
 		{
 			FileInfo file = GetSnippetFile(name, currentTemplateDirectory);
 			return BuildTemplateFile(file);
+		}
+
+		public IDictionary<string,object> LoadModelJson(string name, string currentTempalteDirectory = null)
+		{
+			FileInfo modelFile = GetModelFile(name, currentTempalteDirectory);
+			IDictionary<string, object> model = null;
+			if (modelFile != null && modelFile.Exists)
+			{
+				string rawJson;
+				using (FileStream stream = modelFile.OpenRead())
+				{
+					using (StreamReader reader = new StreamReader(stream))
+					{
+						rawJson = reader.ReadToEnd();
+					}
+				}
+				//model = JsonConvert.DeserializeObject<IDictionary<string, object>>(rawJson, new NestedDictionaryConverter());
+				JavaScriptSerializer serializer = new JavaScriptSerializer();
+				model = serializer.Deserialize<IDictionary<string, object>>(rawJson);
+			}
+
+			return model;
 		}
 
 		private FileInfo LookInDirectory(string fileName, params string[] path)

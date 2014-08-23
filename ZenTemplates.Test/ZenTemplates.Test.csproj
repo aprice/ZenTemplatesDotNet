@@ -16,6 +16,8 @@
     <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
     <IsCodedUITest>False</IsCodedUITest>
     <TestProjectType>UnitTest</TestProjectType>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -69,17 +71,20 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Templates\Sample\global.json" />
+    <None Include="Templates\Sample\list.json" />
     <None Include="Templates\Sample\simple.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Templates\Reference\Controller\Appenders.html" />
     <Content Include="Templates\Reference\Controller\Implied.html" />
     <Content Include="Templates\Reference\Controller\Index.html" />
+    <Content Include="Templates\Reference\list.html" />
     <Content Include="Templates\Sample\Controller\Appenders.html" />
     <Content Include="Templates\Sample\Controller\ControllerSnippet.html" />
     <Content Include="Templates\Sample\Controller\Implied.html" />
     <Content Include="Templates\Sample\Controller\Index.html" />
     <Content Include="Templates\Reference\simple.html" />
+    <Content Include="Templates\Sample\list.html" />
     <Content Include="Templates\Sample\Shared\GlobalSnippet.html" />
     <Content Include="Templates\Sample\Shared\Master.html" />
     <Content Include="Templates\Sample\simple.html" />
@@ -105,6 +110,13 @@
   </Choose>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

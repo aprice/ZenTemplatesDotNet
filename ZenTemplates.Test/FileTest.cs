@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
 using System.IO;
 using ZenTemplates.Configuration;
 using ZenTemplates.Parser;
@@ -8,7 +9,7 @@ namespace ZenTemplates.Test
 	[TestClass]
 	public class FileTest
 	{
-		private static FileRepository GetFileRepository()
+		public static FileRepository GetFileRepository()
 		{
 			ZenTemplatesConfiguration config = new ZenTemplatesConfiguration()
 			{
@@ -86,6 +87,15 @@ namespace ZenTemplates.Test
 				}
 			}
 			Assert.AreEqual(outHtml, result);
+		}
+
+		[TestMethod]
+		public void LoadModelJsonTest()
+		{
+			FileRepository repo = GetFileRepository();
+
+			var model = repo.LoadModelJson("simple");
+			Assert.AreEqual("baz", ((IDictionary<string,object>)model["foo"])["bar"]);
 		}
 	}
 }
