@@ -135,7 +135,7 @@ namespace ZenTemplates.Parser
 			}
 			else if (htmlElement.Attributes["class"] != null)
 			{
-				string[] classes = GetClasses(htmlElement);
+				string[] classes = htmlElement.GetClasses();
 				parentName = classes[0];
 			}
 
@@ -249,45 +249,23 @@ namespace ZenTemplates.Parser
 				if (boolParser.Parse(attribute.Value))
 				{
 					attribute.Remove();
-					string id = element.Id;
-					attribute = element.Attributes["data-z-else"];
-					if (attribute != null)
+					HtmlNode elseElement = element.GetIdAttributeTarget("data-z-else");
+					while (elseElement != null)
 					{
-						id = attribute.Value;
+						elseElement.Remove();
+						elseElement = elseElement.GetIdAttributeTarget("data-z-else");
 					}
-
-					if (!String.IsNullOrEmpty(id))
-					{
-						IEnumerable<HtmlNode> allElements = GetAllElements();
-						IEnumerable<HtmlNode> allElses =
-							from el in allElements
-							where el.Id == id
-								|| (el.Attributes["data-z-else"] != null && el.Attributes["data-z-else"].Value == id)
-							select el;
-						foreach (HtmlNode el in allElses)
-						{
-							if (el != element)
-							{
-								el.Remove();
-							}
-						}
-
-						element.Id = id;
-					}
+					element.Attributes.Remove("data-z-else");
 				}
 				else
 				{
 					element.Remove();
-					return false;
-				}
-			}
-			else
-			{
-				attribute = element.Attributes["data-z-else"];
-				if (attribute != null)
-				{
-					element.SetAttributeValue("id", attribute.Value);
-					attribute.Remove();
+					element = element.GetIdAttributeTarget("data-z-else");
+					if (element != null)
+					{
+						docContext.Element = element;
+						return HandleConditionals(docContext);
+					}
 				}
 			}
 
@@ -322,9 +300,11 @@ namespace ZenTemplates.Parser
 				docContext.NoInfer = true;
 			}
 
+			// Injection by inference
 			if (!docContext.NoInfer)
 			{
-				string[] classes = GetClasses(element);
+				// Class inference
+				string[] classes = element.GetClasses();
 				if (classes.Length > 0)
 				{
 					object propertyValue = docContext.GetProperty(classes[0]);
@@ -335,16 +315,24 @@ namespace ZenTemplates.Parser
 					}
 				}
 
-				attribute = element.Attributes["id"];
-				if (attribute != null)
+				// ID inference
+				string id = element.Id;
+				if (!String.IsNullOrEmpty(id))
 				{
-					object propertyValue = docContext.GetProperty(attribute.Value);
+					object propertyValue = docContext.GetProperty(id);
 					if (propertyValue != null)
 					{
-						Inject(docContext, docContext.GetProperty(attribute.Value));
+						Inject(docContext, docContext.GetProperty(id));
 						return;
 					}
 				}
+			}
+
+			attribute = element.Attributes["data-z-id"];
+			if (attribute != null)
+			{
+				element.Id = attribute.Value;
+				attribute.Remove();
 			}
 
 			if (element.HasChildNodes)
@@ -446,19 +434,6 @@ namespace ZenTemplates.Parser
 					&& el.Attributes[attributeName].Value == value
 				select el;
 			return matchingElements;
-		}
-
-		private string[] GetClasses(HtmlNode element)
-		{
-			HtmlAttribute attribute = element.Attributes["class"];
-			if (attribute != null)
-			{
-				return attribute.Value.Split(' ');
-			}
-			else
-			{
-				return new string[0];
-			}
 		}
 	}
 }

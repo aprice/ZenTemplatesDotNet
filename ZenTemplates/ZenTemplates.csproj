@@ -54,6 +54,7 @@
     <Compile Include="Parser\Context\DocumentContext.cs" />
     <Compile Include="Parser\Context\ILookupContext.cs" />
     <Compile Include="Parser\Context\ModelContext.cs" />
+    <Compile Include="Parser\HtmlUtilities.cs" />
     <Compile Include="Parser\SubstitutionParser.cs" />
     <Compile Include="Parser\TemplateParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

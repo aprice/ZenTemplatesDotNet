@@ -67,13 +67,14 @@ namespace ZenTemplates.Test
 		{
 			string inHtml = @"<!DOCTYPE html>
 <html><head><title>Test document</title></head>
-<body><p data-z-if=""testData"" id=""TestIf"">Test content</p><p data-z-else=""TestIf"">Alternative content</p></body></html>";
+<body><p id=""Test"" data-z-if=""testData"" data-z-else=""TestElse"">Test content</p><p id=""TestElse"" data-z-id=""Test"" data-z-if=""testData2"" data-z-else=""Tertiary"">Alternative content</p><p id=""Tertiary"" data-z-id=""Test""></p></body></html>";
 			string outHtml = @"<!DOCTYPE html>
 <html><head><title>Test document</title></head>
-<body><p id=""TestIf"">Alternative content</p></body></html>";
+<body><p id=""Test"">Alternative content</p></body></html>";
 
 			TemplateParser parser = new TemplateParser();
 			parser.Model["testData"] = false;
+			parser.Model["testData2"] = true;
 			parser.LoadTemplateHtml(inHtml);
 			parser.Render();
 			string result = parser.GetOutput();
